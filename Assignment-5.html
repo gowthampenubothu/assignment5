@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gowtham's Weather Blog</title>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<style type="text/css">
+    body {
+        background-image:url("sea.jpg");/*using a image for the background*/    
+	background-repeat: no-repeat;
+        background-size: 100% auto;
+	background-position: 100% 0%;
+        
+    }
+    #fore
+    {
+      	
+	position:absolute;
+ 	top:50%;
+  	left:50%;
+  	margin-top:-50px; /* this is half the height of your div*/  
+  	margin-left:-100px
+	float:center;
+    	font-size:100%;
+	color:black;
+    }
+    #city
+    {
+        float:center;
+	position:absolute;
+ 	top:45%;
+  	left:50%;
+  	margin-top:-50px; /* this is half the height of your div*/  
+  	margin-left:-100px
+        font-size:100%;
+	
+    }
+       
+</style>
+<script>
+
+      function getWeather(){
+      var location = $('#city').val();
+
+        $.get('https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="' + location + '")&format=json', 
+        function (data) 
+        {
+        if (data.query.results === null) {
+            alert("Location not found: " + location + "!!! City Names only");/*if user entered wrong location*/
+        } 
+        else 
+        {
+            $('.result').html('<h2>' + data.query.results.channel.item.title + '</h2>' +
+                data.query.results.channel.item.description)
+            $('.container').show();
+        }
+ });   
+}
+</script>
+</head>
+
+<body>
+     
+     <form class="navbar-form navbar-right" role="search" action="javascript:getWeather()">
+        <div class="form-group">
+         <input id="city" type="text" class="form-control" placeholder="Enter Any City Name" required>
+        </div>
+        <button id="fore" type="submit"> Show Forecast </button>
+     </form>
+        
+     <div class="container" hidden>
+       <div class="result">
+       </div>
+     </div>
+
+    <div id="forecast" class="row">
+    </div>
+</body>
+</html>
